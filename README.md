@@ -39,7 +39,7 @@ wget https://github.com/zqwlai/open-channel/releases/download/1.0.0/etcd && chmo
 ```
 
 mkdir -p /opt/channel-agent
-cd chanel-agent && wget https://github.com/zqwlai/open-channel/releases/download/1.0.0/channel-agent-1.0.0.tar.gz && tar -zxf channel-agent-1.0.0.tar.gz
+cd chanel-agent && wget https://github.com/zqwlai/open-channel/releases/download/1.0.0/channel-agent-1.0.0.tar.gz && tar -zxf channel-agent-1.0.0.tar.gz && ln -s /opt/channel-agent/cli  /usr/sbin/cli
 #启动客户端
 ./control start
 ```
@@ -57,7 +57,7 @@ cd chanel-agent && wget https://github.com/zqwlai/open-channel/releases/download
 
 ```go
 {
-  "debug": true,	//是否开启debug 
+  "debug": true,    //是否开启debug 
   "ip": "",         //不填写默认为对外通信IP，如果有VIP则填写VIP地址
 
   "http": {
@@ -73,7 +73,7 @@ cd chanel-agent && wget https://github.com/zqwlai/open-channel/releases/download
   "await_timeout": 1800,                //异步执行超时时间，单位秒
   "maxQps": 0                       //最大允许的Qps，为0表示不开启过载保护
   "script_dir": "/usr/local/scripts",       //脚本存放目录
-  "logfile": "/var/log/channel-master.log"	//日志路径
+  "logfile": "/var/log/channel-master.log"  //日志路径
 }
 
 
@@ -101,12 +101,12 @@ cd chanel-agent && wget https://github.com/zqwlai/open-channel/releases/download
   "master": {
     "endpoints": ["192.168.1.5"],       //服务端地址，配置多个可以实现负载均衡
     "http_port": 8105,                  //服务端http端口
-    "connTimeout": 2,					//单位秒
-    "callTimeout": 5					//单位秒
+    "connTimeout": 2,                   //单位秒
+    "callTimeout": 5                    //单位秒
   },
 
   "script_dir": "/tmp/scripts"      //脚本存放目录
-  "logfile": "/var/log/channel-agent.log"	//日志路径
+  "logfile": "/var/log/channel-agent.log"   //日志路径
 }
 
 ```
@@ -197,9 +197,3 @@ r = requests.post('http://master_ip:master_http_port/api/v1/execute', data=data,
 print r.text
 
 ```
-
-
-
-
-
-
