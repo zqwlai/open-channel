@@ -5,7 +5,7 @@ Open-channel
 
 # 概述
 -----
-Open-channel是一个批量管理服务器的工具，与ansible、saltstack功能类似，其核心组件包括channel-master、channel-agent、cli，与这些运维工具相比，它具有如下特点：
+Open-channel是一个批量管理服务器的工具，与ansible、saltstack功能类似，基于golang开发，其核心组件包括channel-master、channel-agent、cli，与这些运维工具相比，它具有如下特点：
 
 1. 运维方便，其客户端管理工具cli提供全方位的系统运行时信息，运维可以快速定位
 2. 稳定，系统本身支持高可用和负载均衡，支持过载保护，数据库弱依赖，服务端热重启
@@ -27,7 +27,7 @@ cd /opt/channel-master && wget https://github.com/zqwlai/open-channel/releases/d
 #导入数据库表
 mysql -h 127.0.0.1 -u root -p < scripts/mysql/channel-db-schema.sql 
 #运行etcd
-wget https://github.com/zqwlai/open-channel/releases/download/1.0.0/etcd && nohup ./etcd --listen-client-urls http://0.0.0.0:2379 -advertise-client-urls http://0.0.0.0:2379 --data-dir=/var/lib/etcd &
+wget https://github.com/zqwlai/open-channel/releases/download/1.0.0/etcd && chmod +x etcd && nohup ./etcd --listen-client-urls http://0.0.0.0:2379 -advertise-client-urls http://0.0.0.0:2379 --data-dir=/var/lib/etcd &
 
 #启动服务端
 ./control start
@@ -57,22 +57,23 @@ cd chanel-agent && wget https://github.com/zqwlai/open-channel/releases/download
 
 ```go
 {
-  "ip": "",			//不填写默认为对外通信IP，如果有VIP则填写VIP地址
+  "debug": true,	//是否开启debug 
+  "ip": "",         //不填写默认为对外通信IP，如果有VIP则填写VIP地址
 
   "http": {
-    "listen": "0.0.0.0:8105"		//http监听端口
+    "listen": "0.0.0.0:8105"        //http监听端口
   },
 
   "etcd": {
-    "addrs": ["127.0.0.1:2379"]			//etcd集群
+    "addrs": ["127.0.0.1:2379"]         //etcd集群
   },
 
-  "db": "root:123qwe@/channel_db?charset=utf8&parseTime=true",	//mysql连接信息
-  "log_level": "debug",			//日志级别
-  "script_dir": "/usr/local/scripts",		//脚本存放目录
-  "timeout": 600,						//同步执行超时时间
-  "await_timeout": 1800,				//异步执行超时时间
-  "maxQps": 0						//最大允许的Qps，为0表示不开启过载保护
+  "db": "root:123qwe@/channel_db?charset=utf8&parseTime=true",  //mysql连接信息
+  "timeout": 600,                       //同步执行超时时间，单位秒
+  "await_timeout": 1800,                //异步执行超时时间，单位秒
+  "maxQps": 0                       //最大允许的Qps，为0表示不开启过载保护
+  "script_dir": "/usr/local/scripts",       //脚本存放目录
+  "logfile": "/var/log/channel-master.log"	//日志路径
 }
 
 
@@ -100,12 +101,12 @@ cd chanel-agent && wget https://github.com/zqwlai/open-channel/releases/download
   "master": {
     "endpoints": ["192.168.1.5"],       //服务端地址，配置多个可以实现负载均衡
     "http_port": 8105,                  //服务端http端口
-    "connTimeout": 2,   
-    "callTimeout": 5
+    "connTimeout": 2,					//单位秒
+    "callTimeout": 5					//单位秒
   },
 
   "script_dir": "/tmp/scripts"      //脚本存放目录
-
+  "logfile": "/var/log/channel-agent.log"	//日志路径
 }
 
 ```
@@ -196,6 +197,7 @@ r = requests.post('http://master_ip:master_http_port/api/v1/execute', data=data,
 print r.text
 
 ```
+
 
 
 
