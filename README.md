@@ -114,6 +114,7 @@ cd chanel-agent && wget https://github.com/zqwlai/open-channel/releases/download
 
 # cli（客户端管理工具）使用说明
 cli作为一个可执行文件，可以管理用户、文件、执行命令/脚本、查看客户端/服务端运行状态、重载客户端/服务端配置等等
+默认管理员账号：root， 密码：123456
 
 ```
     ########  启动相关  ########
